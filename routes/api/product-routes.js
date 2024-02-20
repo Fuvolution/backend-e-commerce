@@ -5,8 +5,7 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // get all products
 router.get('/', (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
+  // This finds all Products and include their associated Category and Tag data
   Product.findAll({
     include: [
       {
@@ -24,14 +23,13 @@ router.get('/', (req, res) => {
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 
 // get one product
 router.get('/:id', (req, res) => {
-  // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
+  // This finds a single product by its id and include its associated Category and Tag data. 
   Product.findByPk(req.params.id, {
     include: [
       {
@@ -52,11 +50,11 @@ router.get('/:id', (req, res) => {
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 
-// create new product
+// This create a new Product
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -134,18 +132,18 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  // delete one product by its `id` value
+  // This deletes one product by its `id` value
   Product.delete(req.body, {
     where: { id: req.params.id }
-  }).then((deletedRows) => {
-    if(deletedRows === 0) {
+  }).then((deletedProduct) => {
+    if(!deletedProduct) {
       return res.status(404).json({ message: `Product not found`});
     }
     res.json({ message: `Product deleted`});
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 

@@ -5,16 +5,6 @@ const { Category, Product } = require('../../models');
 
 router.get('/', (req, res) => {
   // This finds all categories and include their associated products! 
-  /*
-  try{
-    const categories = await Category.findAll({
-      include: [{ model: Product }],
-    });
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-  */
   Category.findAll({
     include: [
       {
@@ -33,27 +23,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
   // This finds one category by its  `id` value and include its associated Product!
-  /*
-  try{
-    const category = await Category.findByPk(req.params.id, {
-      include: [{ model: Product }]
-    });
-    if(!category){
-      res.status(404).json({ message: `Category not found`});
-      return 
-    }
-    res.json(category);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-  */
   Category.findByPk(req.params.id, {
     include: [
       {
-        model: Category,
+        model: Product,
         attributes: ['id', 'product_name'],
       },
     ],
@@ -71,15 +45,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // create a new category
-  /*
-  try{
-    const newCategory = await Category.create(req.body);
-    res.status(201).json(newCategory);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-  */
+  // This create a new Category
   Category.create({
     category_name: req.body.category_name
   })
@@ -93,22 +59,12 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
-  /* 
-  try{
-    const updatedCategory = await Category.update(req.body, {
-      where: { id: req.params.id },
-    });
-    res.json(updatedCategory);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-  */ 
+  // This update a Category by its `id` value
   Category.update(req.body, {
     where: { id: req.params.id }
   })
   .then((updatedCategory) => {
-    if(updatedCategory[0] === 0){
+    if(!updatedCategory){
       return res.status(404).json({ message: `Category not found`});
     }
     res.status(201).json(updatedCategory);
@@ -120,22 +76,12 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
-  /*
-  try{
-    const deletedCategory = await Category.destroy(req.body, {
-      where: { id: req.params.id },
-    });
-    res.json(deletedCategory);
-  } catch (err) { 
-    res.status(400).json(err); 
-  }
-  */
+  // This delete a category by its `id` value
   Category.delete(req.body, {
     where: { id: req.params.id }
   })
   .then((deletedCategory) => {
-    if(deletedCategory === 0){
+    if(!deletedCategory){
       return res.status(404).json({ message: `Category not found`});
     }
     res.status(201).json(deletedCategory);
